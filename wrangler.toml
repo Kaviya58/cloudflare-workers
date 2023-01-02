@@ -1,0 +1,7 @@
+name = "cloudflare-demo"
+main = "src/index.js"
+compatibility_date = "2022-12-29"
+[triggers]
+crons = [ "*/10 * * * *" ]
+
+
