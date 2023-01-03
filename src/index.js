@@ -1,38 +1,29 @@
-addEventListener('scheduled', (event) => {
-	try{
-		event.waitUntil(handleScheduled(event));
-	}catch(e){
-		throw new Error(e);
-	}
+import { handleEvent , handleRequest , doSomething } from "./handlers";
+
+addEventListener("scheduled", (event) => {
+  event.waitUntil(triggerEvent(event));
 });
 
-addEventListener('scheduled', event => {
-	try{
-		event.waitUntil(doSomething());
-	} catch (err){
-		throw new Error(err);
-	}
-})
+async function triggerEvent(event) {
+  console.log(JSON.stringify(event));
 
-addEventListener('fetch', (event) => {
-	try{
-		event.respondWith(handleRequest(event.request));
-	}catch(err){
-		console.log(err);
-	}
-})
+  switch (event.cron) {
+    // You can set up to three schedules maximum.
 
-const doSomething = async() => {
-	console.log('Bonjour Kaviya');
-}
-const handleScheduled = async(request) => {
-	console.log('Hi there...');
-	console.log(`${JSON.stringify(request)}`);
-}
+    case "*/3 * * * *":
+      // Every three minutes
+      await handleRequest();
+      break;
 
-const handleRequest = async(req) => {
-	console.log(`${req.cf.country}`);
-	return await new Response('Kaviya Annyeong!!!',{
-		status: 200
-	})
+    case "*/10 * * * *":
+      // Every ten minutes
+      await handleEvent();
+      break;
+
+    case "*/45 * * * *":
+      // Every forty-five minutes
+      await doSomething();
+      break;
+  }
+  console.log("cron processed");
 }
